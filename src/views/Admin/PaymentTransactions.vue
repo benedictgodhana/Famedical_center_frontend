@@ -108,7 +108,7 @@
         search: '', // Initialize search string
         headers: [
           { title: 'ID', value: 'id' },
-          { title: 'Booking ID', value: 'booking_id' },
+          { title: 'Student Name', value: 'booking_id' },
           { title: 'Amount', value: 'amount' },
           { title: 'Payment Method', value: 'payment_method' },
           { title: 'Status', value: 'status' },
