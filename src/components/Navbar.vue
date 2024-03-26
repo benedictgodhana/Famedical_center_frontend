@@ -95,23 +95,19 @@
 
  <!-- Sign In Modal -->
  <v-dialog v-model="signInModal" max-width="600px">
-  <v-card style="border-radius: 10px;" elevation="4">
+  <v-card style="border-radius:2px" elevation="4">
     <v-card-title class="text-center" style="font-weight: 800;">Sign In</v-card-title>
     <v-card-text>
       <v-form @submit.prevent="signIn">
         <v-text-field v-model="signInData.email" label="Email" required variant="outlined"></v-text-field>
         <v-text-field v-model="signInData.password" label="Password" type="password" required variant="outlined"></v-text-field>
         <!-- Login button with loading state -->
-        <v-btn :loading="loading" type="submit" color="success" style="border-radius: 10px; width: 100%; text-transform: lowercase;">
+        <v-btn :loading="loading" type="submit" color="purple" style="width: 100%; text-transform: lowercase;">
           <v-icon left style="margin: 3px;">mdi-login</v-icon>
           Login
         </v-btn>
       </v-form>
-      <p class="text-center" style="padding-top: 12px;font-weight: 600;">Or</p>
-      <!-- Sign in with Google button -->
-      <v-btn color="primary" @click="signInWithGoogle" style="border-radius: 10px; margin-top: 10px;width:100%;text-transform: lowercase;">
-        <v-icon left style="margin:3px" color="yellow">mdi-google</v-icon> Sign In with Google
-      </v-btn>
+     
     </v-card-text>
   </v-card>
 </v-dialog>
@@ -128,15 +124,11 @@
         <v-text-field v-model="signUpData.email" label="Email" required variant="outlined"></v-text-field>
         <v-text-field v-model="signUpData.password" label="Password" type="password" required variant="outlined"></v-text-field>
         <v-text-field v-model="signUpData.passwordConfirmation" label="Confirm Password" type="password" required variant="outlined"></v-text-field>
-        <v-btn :loading="loading"  type="submit" color="success" style="border-radius: 10px; width: 100%;">
+        <v-btn :loading="loading"  type="submit" color="purple" style="width: 100%;">
           <v-icon>mdi-account-plus</v-icon> Sign Up
         </v-btn>
       </v-form>
-      <p class="text-center" style="padding-top: 12px;font-weight: 700;">Or</p>
-      <!-- Sign in with Google button -->
-      <v-btn color="primary" @click="signInWithGoogle" style="border-radius: 10px; margin-top: 10px; width: 100%; text-transform: lowercase;">
-        <v-icon left style="margin: 3px" color="yellow">mdi-google</v-icon> Sign Up with Google
-      </v-btn>
+     
     </v-card-text>
   </v-card>
 </v-dialog>
