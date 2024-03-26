@@ -1,15 +1,10 @@
 <template>
     <v-container>
-      <!-- Navigation bar -->
       <AdminNavbar></AdminNavbar>
   
-      <!-- Sidebar -->
       <AdminSidebar :sidebar="sidebar" @toggle-sidebar="toggleSidebar" />
   
-      <!-- Search form -->
   
-      <!-- Vuetify datatable to display payment transactions -->
-      <!-- Vuetify datatable to display payment transactions -->
 <v-card variant="outlined" style="width: 100%; margin-top: 20px;">
   <v-card-title style="background:purple;color:white">Payment Transactions Table</v-card-title>
 
@@ -17,7 +12,6 @@
     <v-text-field v-model="search" label="Search" variant="outlined"></v-text-field>
 
     <v-data-table :headers="headers" :items="filteredTransactions" item-key="id" style="text-transform:none; width: 100%;">
-      <!-- Display the data in the table -->
       <template v-slot:item="{ item }">
         <tr>
           <td>{{ item.id }}</td>
@@ -34,7 +28,6 @@
           </td>
         </tr>
       </template>
-      <!-- Display total amount -->
       <template v-slot:footer>
         <td colspan="2"></td>
         <td><strong>Total:</strong></td>
@@ -51,7 +44,6 @@
 </v-card>
 
   
-      <!-- Dialog for editing transaction status -->
       <v-dialog v-model="editDialog" max-width="600">
         <v-card>
           <v-card-title>Edit Transaction Status</v-card-title>
@@ -65,8 +57,6 @@
         </v-card>
       </v-dialog>
   
-      <!-- Dialog for viewing transaction details -->
-     <!-- Dialog for viewing transaction details -->
 <v-dialog v-model="viewDialog" max-width="600">
   <v-card>
     <v-card-title>Transaction Details</v-card-title>
