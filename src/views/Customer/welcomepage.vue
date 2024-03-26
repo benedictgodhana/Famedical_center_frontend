@@ -179,7 +179,7 @@ export default {
       authToken: null, // Authentication token
       authenticatedUser: null, // Authenticated user data
       carouselItems: [
-        { image: '/hands-holding-cleaning-tools-solutions.jpg' },
+        { image: '/empty-hallway-background.jpg' },
         { image: '/136167.jpg' },
         { image: '/smiling-positive-housewife-with-dreadlocks-holds-mop.jpg' },
         // Add more carousel items as needed

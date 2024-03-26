@@ -1,217 +1,331 @@
 <template>
   <div>
-<Navbar></Navbar>
-<v-carousel :show-arrows="false" cycle>
-    <v-carousel-item
-      v-for="(item,i) in items"
-      :key="i"
-      :src="item.src"
-      cover
-    ></v-carousel-item>
-  </v-carousel>
-  <v-sheet class="mx-auto" elevation="23" max-width="100%">
-    <v-slide-group v-model="selectedDoctor" class="pa-4" show-arrows cycle style="margin-left:120px">
-      <v-slide-group-item v-for="(doctor, index) in doctors" :key="index" >
-        <v-card
-          color="grey-lighten-1"
-          class="ma-4"
-          height="500"
-          width="340"
-          @click="openDoctorDetails(doctor)"
-          elevation="10"
-          style="border-radius: 10px;"
-        >
-        <v-card-text style="background-color: purple;color:white">            
-          <h4>{{ doctor.name }}</h4>
+    <Navbar></Navbar>
+
+    
+      <v-carousel cycle :show-arrows="false" hide-delimiter-background  height="600">
+        <!-- Carousel items -->
+        <v-carousel-item v-for="(item, index) in carouselItems" :key="index" :src="item.image" cover>
+          <!-- Overlay text and buttons -->
+          <div class="overlay">
+            <v-img src="/logo.png" alt="Logo" class="logo mr-2" max-height="60" contain></v-img>
+            <span class="headline text-white" style="text-transform: none;">Welcome to Famedical Center</span>
+            <p class="subtext text-white">Your Health, Our Priority.</p>
+\          </div>
+        </v-carousel-item>
+      </v-carousel>
+      <v-sheet style="background:purple;">
+        <v-card-text class="text-center">
+          <em style="font-size: 18px;color:white;text-transform: lowercase;">Your Health, Our Priority.</em>
         </v-card-text>
-          <v-img
-            :src="doctor.image"
-            width="100%"
-            height="100%"
-            contain
-           
-          ></v-img>
-        </v-card>
-      </v-slide-group-item>
-    </v-slide-group>
+      </v-sheet>
+
 
     <v-dialog v-model="dialog" max-width="600">
-      <v-card style="border-radius: 10px;">
-        <v-card-title style="background-color: purple;color:white">{{ selectedDoctor.name }}</v-card-title><br>
-        <v-card-subtitle style="text-align: center; font-size: 16px;font-weight: 700;">{{ selectedDoctor.specialization }}</v-card-subtitle>
-        <v-card-text>{{ selectedDoctor.description }}</v-card-text>
-        <v-divider></v-divider>
-        <v-card-subtitle style="text-align: center; font-size: 16px;font-weight: 700;">Schedule</v-card-subtitle>
-        <v-list>
-          <v-list-item v-for="(time, index) in selectedDoctor.schedule" :key="index">
-            <v-list-item-content>{{ time }}</v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-btn color="purple"><v-icon>mdi-calendar</v-icon>Book AN Appointment</v-btn>
-      </v-card>
-    </v-dialog>
-  </v-sheet>
- 
- 
-
+  <v-card style="width:100%;">
+    <v-card-title class="headline text-center">Service Details: {{ selectedService }}</v-card-title>   
+    <v-card-text>{{selectedServiceDescription }}</v-card-text>
+   
+    
   
+    <v-card-actions class="justify-center">
+      <!-- Buttons for submitting the form and closing the dialog -->
+    
+
+      <v-btn color="white" style="background: red;border-radius: 10px;" elevation="4" @click="closeForm"><v-icon>mdi-cancel</v-icon>Close</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
+
+
+    
+    <!-- Carousel with interactive elements -->
+    <!-- Cards displaying community activities -->
+    <v-container>
+
+    <v-alert v-if="bookingSuccess" type="success" outlined dismissible>
+      Booking successful!
+    </v-alert>
+
+   
+    <v-sheet class="about-section">
+        <v-card-title class="text-center">Available Medical Services</v-card-title>
+      </v-sheet>
+      <v-carousel cycle hide-controls hide-delimiters interval="6000" style="height: 400px; overflow: hidden;">
+        <!-- First cleaning agent card -->
+        <v-carousel-item v-for="(service, index) in services" :key="index">
+          <v-row justify="center">
+            <v-col cols="12" md="8" lg="6">
+              <v-card elevation="4" class="pa-4" style="border-radius: 10px;" variant="outlined">
+                <v-card-title class="text-center" style="background:purple;color:white">{{ service.name }}</v-card-title>
+                <!-- Image representing the service as an avatar -->
+                <v-img src="/3568984.jpg" contain height="200" style="margin-left: 10px; margin-top: 5px;"></v-img>
+                <v-card-actions class="justify-center">
+                  <!-- Clickable area for the card -->
+                  <v-btn text @click="navigateToService(service)" class="mx-auto" style="background:purple;text-transform: lowercase;width: 100%;" color="white" elevation="4"><v-icon>mdi-calendar</v-icon>View Details</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-carousel-item>
+      </v-carousel>
+    </v-container>
+    
   </div>
 </template>
-<script setup>
-import { ref } from 'vue';
-
+<script>
+import axiosInstance from '@/service/api';
 import Navbar from '../components/Navbar.vue';
-
-
-
-const selectedDoctor = ref(null);
-
-const selectedArticle = ref(null);
-const articleDialog = ref(false);
-
-
-const dialog = ref(false);
-
-
-const articles = [
-  {
-    title: 'Heart Wellness',
-    subtitle: 'How to take care of your heart to avoid any complications',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...', // Add your article content here
+export default {
+  components: {
+    Navbar,
   },
-  {
-    title: 'Epic Adventures in Open Worlds',
-    subtitle: 'Embark on a journey through vast, immersive landscapes and quests.',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...', // Add your article content here
-  },
-  // Add more articles as needed
-];
+  data() {
+    return {
+      bookingError: null,
 
-const games= [
-{
-          img: 'the-hearts-electrical-system-2x.jpg',
-          title: 'Heart Wellness',
-          subtitle: 'How to take care of your heart to avoid any complications',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...', // Add your article content here
-          advanced: false,
-          duration: '8 minutes',
-          notes:'',
-        },
-        {
-          img: '',
-          title: 'Epic Adventures in Open Worlds',
-          subtitle: 'Embark on a journey through vast, immersive landscapes and quests.',
-          advanced: true,
-          duration: '10 minutes',
-        },
-        {
-          img: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/3.png',
-          title: 'Surviving the Space Station Horror',
-          subtitle: 'Navigate a haunted space station in this chilling survival horror game.',
-          advanced: false,
-          duration: '9 minutes',
-        },
-        {
-          img: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/5.png',
-          title: 'Neon-Lit High-Speed Racing Thrills',
-          subtitle: 'Experience adrenaline-pumping races in a futuristic, neon-soaked city.',
-          advanced: true,
-          duration: '12 minutes',
-        },
-        {
-          img: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/6.png',
-          title: 'Retro-Style Platformer Adventures',
-          subtitle: 'Jump and dash through pixelated worlds in this classic-style platformer.',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...', // Add your article content here
-          advanced: false,
-          duration: '11 minutes',
-        },
-        {
-          img: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/7.png',
-          title: 'Medieval Strategic War Campaigns',
-          subtitle: 'Lead armies into epic battles and conquer kingdoms in this strategic game.',
-          advanced: true,
-          duration: '10 minutes',
-        },
-        {
-          img: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/1.png',
-          title: 'Underwater VR Exploration Adventure',
-          subtitle: 'Dive deep into the ocean and discover the mysteries of the underwater world.',
-          advanced: true,
-          duration: '11 minutes',
-        },
-        {
-          img: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/8.png',
-          title: '1920s Mystery Detective Chronicles',
-          subtitle: 'Solve crimes and uncover secrets in the glamourous 1920s era.',
-          advanced: false,
-          duration: '9 minutes',
-        },
-];
-
-const doctors = [
-  {
-    name: 'Dr. Julius Mwathuma',
-    specialization: 'Cardiology',
-    description: 'Cardiology focuses on the diagnosis and treatment of heart and circulatory system disorders. Dr. Julius Mwathuma, a cardiologist, specializes in managing conditions like heart disease. His expertise ensures comprehensive care for patients with cardiovascular issues, promoting overall heart health.',
-    image: '/portrait-successful-young-doctor-with-folder-stethoscope.jpg',
-    schedule: ['Monday 9:00 AM - 5:00 PM', 'Wednesday 1:00 PM - 7:00 PM'],
-  },
-  {
-    name: 'Dr. Anita Mwendee',
-    specialization: 'Physiotherapy',
-    description: 'Physiotherapy, or physical therapy, is a healthcare profession dedicated to enhancing and restoring physical functionality and mobility. Our skilled physiotherapists employ various therapeutic techniques to address musculoskeletal issues, injuries, and disabilities. Dr.Anita Mwendee, a seasoned physiotherapist, specializes in creating personalized rehabilitation programs. His commitment ensures patients receive targeted care, promoting recovery, and improving overall physical well-being.',
-    image: '/medium-shot-smiley-doctor-with-coat.jpg',
-    schedule: ['Monday 9:00 AM - 5:00 PM', 'Wednesday 1:00 PM - 7:00 PM'],
-  },
-  {
-    name: 'Dr. Jack Muthoni',
-    specialization: 'Bacteriology',
-    description: 'Bacteriology is the branch of microbiology that explores the world of bacteria. Dr. Jack Muthoni, an expert bacteriologist, delves into the study of bacteria to understand their characteristics, behaviors, and impact on human health. With a focus on preventing and treating bacterial infections,he contributes to advancements in medical science, ensuring a safer and healthier future for patients.',
-    image: '/front-view-smiley-man-wearing-lab-coat.jpg',
-    schedule: ['Monday 9:00 AM - 5:00 PM', 'Wednesday 1:00 PM - 7:00 PM'],
-  },
-  {
-    name: 'Dr. Halima Kofa',
-    specialization: 'Nutriation',
-    description: 'Nutrition is the science that investigates the interactions between living organisms and the substances they consume for sustenance. Dr.Halima Kofa, a dedicated nutritionist, specializes in guiding individuals towards optimal health through balanced diets and personalized nutritional plans. With a focus on preventing and managing health conditions through proper nutrition, she plays a crucial role in promoting overall well-being and longevity for patients.',
-    image: '/woman-with-dreadlocks-dark-skinned-doctor-woman-hospital-gown.jpg',
-    schedule: ['Monday 9:00 AM - 5:00 PM', 'Wednesday 1:00 PM - 7:00 PM'],
-  },
- 
-  // Add more doctors as needed
-];
-
-
-
-const openArticleDetails = (article) => {
-  selectedArticle.value = article;
-  articleDialog.value = true;
-};
-
-
-const openDoctorDetails = (doctor) => {
-  selectedDoctor.value = doctor;
-  dialog.value = true;
-};
-
-const model = ref(null);
-
-const items = [
-  {
-    src: 'doctor-writing-patient-daily-report-exmaination.jpg',
-   
-  },
-  {
-    src: 'medical-banner-with-doctor-wearing-goggles.jpg',
-  },
-  {
-    src: 'empty-hallway-background.jpg',
-  },
-
+      contact: '', // New contact field
+    paymentMethod: null, // New selected payment method
+    submitting: false, // Boolean to track the submitting state
   
+      today: new Date().toISOString().substr(0, 10), // Set today's date in ISO format (YYYY-MM-DD)
+      bookingSuccess: false, // Track the success state of the booking
+      dialog: false, // Controls the visibility of the dialog
+      date: null, // Selected date
+      time: null, // Selected time
+      location: '', // Selected location
+      selectedProvider: {},
+      selectedServiceId: null,
+      availableEmployees: [],
+      services: [], // List of available services
+      authToken: null, // Authentication token
+      authenticatedUser: null, // Authenticated user data
+      carouselItems: [
+        { image: '/doctor-writing-patient-daily-report-exmaination.jpg' },
+        { image: '/medical-banner-with-doctor-wearing-goggles.jpg' },
+        { image: '/empty-hallway-background.jpg' },
+        // Add more carousel items as needed
+      ],
+      paymentMethods: [
+  { name: 'M-Pesa', value: 'mpesa', image: '/images.png' },
+  { name: 'Cash', value: 'cash' },
+  { name: 'Bank Transfer', value: 'bank_transfer' }
+],
 
-  
-];
-</script>
-	
+
+    };
+  },
+  computed: {
+  formattedEmployees() {
+    return this.availableEmployees.map(employee => ({
+      text: employee.name, // Assuming 'name' is the correct property
+      value: employee.id, // Assuming 'id' is the correct property
+    }));
+  }
+},
+
+
+  mounted() {
+    this.fetchServices(); // Fetch services when the component is mounted
+    this.fetchAuthenticationToken(); // Fetch authentication token from local storage
+    this.fetchAuthenticatedUser(); // Fetch authenticated user details from local storage
+  },
+  created() {
+    this.authToken = localStorage.getItem('token');
+    console.log('Auth token:', this.authToken); // Log the retrieved token for debugging
+  },
+  methods: {
+    selectProvider(provider) {
+    this.selectedProvider = provider;
+  },
+    async fetchAuthenticationToken() {
+      this.authToken = localStorage.getItem('token');
+      console.log('Auth token:', this.authToken); // Log the retrieved token for debugging
+    },
+    fetchAuthenticatedUser() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user) {
+        this.authenticatedUser = user;
+      }
+    },
+    async fetchAvailableEmployees() {
+  try {
+    const response = await axiosInstance.get(`/services/${this.selectedServiceId}/employees`, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`,
+      },
+    });
+
+    if ('employees' in response.data && Array.isArray(response.data.employees)) {
+      const employeeData = response.data.employees.map(employee => ({
+        id: employee.id,
+        name: employee.name,
+        // Add any additional fields you want to retrieve and use in your cards
+      }));
+      
+      this.availableEmployees = employeeData;
+    } else {
+      console.error('Unexpected response data format:', response.data);
+    }
+  } catch (error) {
+    console.error('Error fetching available employees:', error);
+    // Handle error, e.g., show an error message to the user
+  }
+},
+
+async submitForm() {
+  try {
+    this.submitting = true;
+
+    // Retrieve user data from local storage
+    const userData = JSON.parse(localStorage.getItem('user'));
+
+    // Check if user data and user ID are available
+    if (!userData || !userData.id) {
+      console.error('User data or user ID not found');
+      return;
+    }
+
+    // Construct the date and time string
+    const dateTime = `${this.date} ${this.time}`;
+
+    // Extract employee ID from the selectedProvider object
+    const employeeId = this.selectedProvider.value;
+
+    // Prepare booking data
+    const bookingData = {
+      user_id: userData.id,
+      date_time: dateTime,
+      location: this.location,
+      service_id: this.selectedServiceId,
+      employee_id: this.selectedProvider.id,
+      contact: this.contact,
+      payment_method: this.paymentMethod,
+    };
+
+    // Check if authentication token is available
+    if (!this.authToken) {
+      console.error('Authentication token not found');
+      return;
+    }
+
+    // Set request headers with the authentication token
+    const headers = { Authorization: `Bearer ${this.authToken}` };
+
+    // Send a POST request to create the booking
+    const response = await axiosInstance.post('/bookings', bookingData, { headers });
+
+    // If employee is already booked, display an error message
+    if (response.data.error) {
+      this.bookingError = response.data.error;
+      this.dialog = false; // Close the dialog if there's an error
+      setTimeout(() => {
+        this.bookingError = null; // Hide the error message after 3 seconds
+      }, 3000);
+    } else {
+      console.log('Booking response:', response.data);
+      this.bookingSuccess = true;
+      setTimeout(this.hideSuccessMessage, 4000);
+      this.closeForm();
+    }
+  } catch (error) {
+    console.error('Error booking service:', error);
+    this.bookingError = 'An error occurred while booking the service. Please try again later.';
+    setTimeout(() => {
+      this.bookingError = null; // Hide the error message after 3 seconds
+    }, 3000);
+  } finally {
+    this.submitting = false;
+  }
+},
+
+    hideSuccessMessage() {
+      this.bookingSuccess = false;
+    },
+    closeForm() {
+      this.dialog = false;
+    },
+    navigateToService(service) {
+  this.selectedServiceId = service.id; // Update to set the selected service ID
+  this.selectedService = service.name;
+  this.selectedServiceDescription = service.description;
+
+  this.fetchAvailableEmployees(); // Fetch available employees for the selected service
+  this.dialog = true;
+},
+
+
+    fetchServices() {
+      axiosInstance.get('/services')
+        .then(response => {
+          this.services = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching services:', error);
+          // Handle error, e.g., show an error message to the user
+        });
+    },
+    checkAuthentication() {
+      // Check authentication status
+      // Update isAuthenticated accordingly
+      this.isAuthenticated = true;
+    },
+  },
+};
+</script><style>
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-transform: capitalize;
+}
+.overlay .headline {
+  font-size: 24px;
+}
+.overlay .subtext {
+  margin-top: 10px;
+  font-size: 16px;
+}
+.btn-get-involved {
+  margin: 14px;
+  border-radius: 20px;
+  text-transform: lowercase;
+}
+.activity-card {
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+.activity-card .v-card-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.activity-card .v-card-text {
+  font-size: 16px;
+}
+.about-section {
+  padding: 20px;
+  margin-top: 30px;
+  border-radius: 10px;
+}
+.v-carousel__item img {
+  border-radius: 10px;
+}
+.image {
+  border-radius: 10px; /* Rounded corners */
+  object-fit: cover; /* Ensure the image covers the entire space */
+}
+.selected-card {
+  background-color: red;
+  border-width: 2px;
+}
+
+</style>
