@@ -64,7 +64,7 @@
       <div v-if="selectedTransaction">
         <strong>ID:</strong> {{ selectedTransaction.id }}
         <br>
-        <strong>Booking ID:</strong> {{ selectedTransaction.booking_id }}
+        <strong>Student Name:</strong> {{ selectedTransaction.booking_id }}
         <br>
         <strong>Amount:</strong> {{ selectedTransaction.amount }}
         <br>

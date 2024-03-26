@@ -123,7 +123,7 @@
   }
   
   .profile-title {
-    background: #ffcc00;
+    background:purple;
     color: #333;
   }
   
