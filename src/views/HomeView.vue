@@ -32,7 +32,7 @@
       <!-- Buttons for submitting the form and closing the dialog -->
     
 
-      <v-btn color="white" style="background: red;border-radius: 10px;" elevation="4" @click="closeForm"><v-icon>mdi-cancel</v-icon>Close</v-btn>
+      <v-btn color="white" style="background:purple;border-radius:5px;width: 11;" elevation="4" @click="closeForm"><v-icon>mdi-cancel</v-icon>Close</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>
@@ -103,7 +103,6 @@ export default {
       authenticatedUser: null, // Authenticated user data
       carouselItems: [
         { image: '/doctor-writing-patient-daily-report-exmaination.jpg' },
-        { image: '/medical-banner-with-doctor-wearing-goggles.jpg' },
         { image: '/empty-hallway-background.jpg' },
         // Add more carousel items as needed
       ],

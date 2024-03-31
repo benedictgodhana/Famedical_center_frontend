@@ -10,8 +10,10 @@
        
        </v-header>
        <!-- Logo with separator -->
-
-       
+       <v-btn style="font-weight: 500;" icon @click="sidebar = !sidebar" class="hidden-md-and-up">
+         <v-icon size="16">mdi-menu</v-icon>
+       </v-btn>
+       <v-spacer></v-spacer>
        
        <!-- Navigation buttons for larger screens -->
      
@@ -34,9 +36,7 @@
 
        
        <!-- Button to open the sidebar on small screens -->
-       <v-btn style="font-weight: 500;" icon @click="sidebar = !sidebar" class="hidden-md-and-up">
-         <v-icon size="16">mdi-menu</v-icon>
-       </v-btn>
+       
        <v-btn style="font-weight: 500;font-family: 'poppins';text-transform: lowercase;" @click="showSignInModal" class="hidden-sm-and-down">
          <v-icon size="16">mdi-account</v-icon>Login
        </v-btn>
@@ -44,42 +44,12 @@
    </v-app-bar>
    <!-- Sidebar for small screens -->
    <v-navigation-drawer v-model="sidebar" app class="sidebar-drawer">
- <v-list>
-   <v-list-item-group>
-     <!-- Home -->
-     <v-btn to="/" class="sidebar-button" elevation="0" active-class="active-button">
-       <v-icon size="16" style="padding-right: 10px;">mdi-home</v-icon>
-       <span style="text-transform: capitalize;">Home</span>
-     </v-btn>
-
-     <!-- About -->
-     <v-btn to="/about" class="sidebar-button" elevation="0" active-class="active-button">
-       <v-icon size="16" style="padding-right: 10px;">mdi-information</v-icon>
-       <span style="text-transform: capitalize;">About</span>
-     </v-btn>
-
-     <!-- Leadership -->
-     <v-btn to="/leadership" class="sidebar-button" elevation="0" active-class="active-button">
-       <v-icon size="16" style="padding-right: 10px;">mdi-account-tie</v-icon>
-       <span style="text-transform: capitalize;">Contact</span>
-     </v-btn>
-
-     
-
-    
-
-     <!-- Sign Up -->
-     <v-btn @click="showSignUpModal" class="sidebar-button" elevation="0" active-class="active-button">
-       <v-icon size="16" style="padding-right: 10px;">mdi-account-plus</v-icon>
-       <span style="text-transform: capitalize;">Register</span>
-     </v-btn>
-
-     <!-- Login -->
-     <v-btn @click="showSignInModal" class="sidebar-button" elevation="0" active-class="active-button">
-       <v-icon size="16" style="padding-right: 10px;">mdi-account</v-icon>
-       <span style="text-transform: capitalize;">Login</span>
-     </v-btn>
-   </v-list-item-group>
+ <v-list nav>
+  <v-list-item prepend-icon="mdi-home" to="/" title="Home" value="inbox" active-class="active-button"></v-list-item>
+  <v-list-item prepend-icon="mdi-information" to="/about" title="About" value="inbox" active-class="active-button"></v-list-item>
+  <v-list-item prepend-icon="mdi-email" to="/contact" title="Contact" value="inbox" active-class="active-button"></v-list-item>
+  <v-list-item prepend-icon="mdi-account-plus" @click="showSignUpModal" title="Register" value="inbox" active-class="active-button"></v-list-item>
+  <v-list-item prepend-icon="mdi-account"  @click="showSignInModal" title="Login" value="inbox" active-class="active-button"></v-list-item>
  </v-list>
 </v-navigation-drawer>
 <v-alert ref="loginSuccessAlert" type="success" dismissible v-model="loginSuccessAlertVisible">
@@ -106,11 +76,15 @@
           <v-icon left style="margin: 3px;">mdi-login</v-icon>
           Login
         </v-btn>
+        <!-- Forgot password link -->
+        <div class="text-center mt-2">
+          <a href="/forgot_password" @click="forgotPassword">Forgot Password?</a>
+        </div>
       </v-form>
-     
     </v-card-text>
   </v-card>
 </v-dialog>
+
 
 
 
